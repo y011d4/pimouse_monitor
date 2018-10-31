@@ -16,6 +16,10 @@ ls.subscribe(function(message) {
         });
 });
 
+$('#camstream').attr('data', 'http://'
+        + location.hostname
+        + ':10000/stream?topic=/cv_camera_node/image_raw');
+
 var on = new ROSLIB.Service({
         ros : ros,
         name : '/motor_on',
@@ -92,17 +96,21 @@ window.onkeyup = function(e) {
 function motorControl(){
         fw = 0.0001; //Math.sign(fw) should be 1 when stopped
         rot = 0.0;
+        speed = 500
+        //speed = 300
+        rot_speed = 240
+        //rot_speed = 180
         if (keys["w"]) {
-                fw = 300*0.001;
+                fw = speed*0.001;
         }
         if (keys["s"]) {
-                fw = -300*0.001;
+                fw = -speed*0.001;
         }
         if (keys["a"]) {
-                rot = 3.141592*parseInt(180)/180 * Math.sign(fw);
+                rot = 3.141592*parseInt(rot_speed)/180 * Math.sign(fw);
         }
         if (keys["d"]) {
-                rot = -3.141592*parseInt(180)/180 * Math.sign(fw);
+                rot = -3.141592*parseInt(rot_speed)/180 * Math.sign(fw);
         }
         v = new ROSLIB.Message({linear:{x:fw,y:0,z:0}, angular:{x:0,y:0,z:rot}});
         vel.publish(v);
